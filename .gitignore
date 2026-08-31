@@ -1,0 +1,38 @@
+# ── Node modules ──────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ── Build output ───────────────────────────────────────────────
+dist/
+build/
+*.tsbuildinfo
+
+# ── Database files (auto-generated) ───────────────────────────
+data/
+*.db
+*.db-shm
+*.db-wal
+
+# ── Environment ────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+
+# ── Editor / OS ────────────────────────────────────────────────
+.vscode/settings.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+.DS_Store
+Thumbs.db
+
+# ── Logs ───────────────────────────────────────────────────────
+logs/
+*.log
+
+# ── Vite cache ─────────────────────────────────────────────────
+.vite/
