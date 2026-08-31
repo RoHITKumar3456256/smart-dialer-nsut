@@ -173,6 +173,6 @@ export class SafetyController {
   getRecentDecisions(campaignId: string, limit: number = 50): object[] {
     return this.db.prepare(`
       SELECT * FROM pacing_decisions WHERE campaign_id=? ORDER BY created_at DESC LIMIT ?
-    `).all(campaignId, limit);
+    `).all(campaignId, limit) as object[];
   }
 }

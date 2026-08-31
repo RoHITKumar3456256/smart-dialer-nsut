@@ -84,8 +84,9 @@ router.get('/scenarios', (_req: Request, res: Response) => {
 // ── POST /api/scenarios/:key/run ──────────────────────────────────────────
 router.post('/scenarios/:key/run', async (req: Request, res: Response) => {
   try {
-    const campaignId = await simulator.runScenario(req.params.key);
-    res.json({ success: true, campaignId, scenario: req.params.key });
+    const key = Array.isArray(req.params.key) ? req.params.key[0] : req.params.key;
+    const campaignId = await simulator.runScenario(key);
+    res.json({ success: true, campaignId, scenario: key });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Unknown error';
     res.status(400).json({ success: false, error: message });

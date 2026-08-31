@@ -157,11 +157,26 @@ smart-dialer-nsut/
 
 ## 🚀 Setup & Running
 
-### Prerequisites
+[![SmartDialer CI](https://github.com/RoHITKumar3456256/smart-dialer-nsut/actions/workflows/ci.yml/badge.svg)](https://github.com/RoHITKumar3456256/smart-dialer-nsut/actions/workflows/ci.yml)
+
+### Option A — One-Click Docker Startup (Recommended)
+
+```bash
+docker compose up --build
+```
+- Frontend Dashboard: `http://localhost:5173`
+- Backend REST API: `http://localhost:3001`
+- WebSocket Server: `ws://localhost:3001/ws`
+
+---
+
+### Option B — Local Node.js Startup
+
+#### Prerequisites
 - **Node.js v18+** ([download](https://nodejs.org))
 - npm
 
-### Step 1 — Start the Backend
+#### Step 1 — Start the Backend
 
 ```bash
 cd backend
