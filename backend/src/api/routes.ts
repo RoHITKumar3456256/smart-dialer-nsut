@@ -177,9 +177,55 @@ router.post('/failure/add-agents', (req: Request, res: Response) => {
 
 // ── GET /api/providers/health ─────────────────────────────────────────────
 router.get('/providers/health', (_req: Request, res: Response) => {
-  // Access providers via simulator — simplified
   res.json({
     ProviderA: { name: 'ProviderA', type: 'fast-reliable' },
     ProviderB: { name: 'ProviderB', type: 'slow-unreliable' },
+    Plivo: { name: 'Plivo', type: 'live-telecom-adapter' },
+  });
+});
+
+// ── Plivo Webhook Endpoints ───────────────────────────────────────────────
+router.post('/webhooks/plivo/answer', (req: Request, res: Response) => {
+  const callId = req.query.callId as string;
+  const callSid = req.body?.CallUUID ?? `PLIVO-${Date.now()}`;
+  if (callId) {
+    callSM.recordProviderEvent(callId, 'ANSWERED', 'Plivo', req.body ?? {}, `${callId}-ANSWERED-${Date.now()}`);
+    callSM.transition(callId, 'ANSWERED');
+  }
+  res.setHeader('Content-Type', 'text/xml');
+  res.send('<Response><Speak>Hello! Connecting your call to an available agent.</Speak></Response>');
+});
+
+router.post('/webhooks/plivo/hangup', (req: Request, res: Response) => {
+  const callId = req.query.callId as string;
+  const callSid = req.body?.CallUUID ?? `PLIVO-${Date.now()}`;
+  if (callId) {
+    callSM.recordProviderEvent(callId, 'COMPLETED', 'Plivo', req.body ?? {}, `${callId}-COMPLETED-${Date.now()}`);
+    callSM.transition(callId, 'COMPLETED');
+  }
+  res.setHeader('Content-Type', 'text/xml');
+  res.send('<Response></Response>');
+});
+
+// ── GET /api/docs ─────────────────────────────────────────────────────────
+router.get('/docs', (_req: Request, res: Response) => {
+  res.json({
+    title: 'SmartDialer REST API Specification',
+    version: '1.0.0',
+    endpoints: [
+      { method: 'GET', path: '/api/health', desc: 'System health status' },
+      { method: 'GET', path: '/api/scenarios', desc: 'List configured simulation scenarios (A/B/C/D)' },
+      { method: 'POST', path: '/api/scenarios/:key/run', desc: 'Run specific scenario' },
+      { method: 'POST', path: '/api/scenarios/stop', desc: 'Stop active workers' },
+      { method: 'GET', path: '/api/metrics/live', desc: 'Live agent and call statistics' },
+      { method: 'GET', path: '/api/safety/decisions', desc: 'Safety controller audit logs' },
+      { method: 'GET', path: '/api/agents', desc: 'Agent roster with status and version' },
+      { method: 'GET', path: '/api/calls', desc: 'Recent call lifecycle events' },
+      { method: 'POST', path: '/api/failure/worker-crash', desc: 'Inject worker crash' },
+      { method: 'POST', path: '/api/failure/provider-outage', desc: 'Inject provider failure' },
+      { method: 'POST', path: '/api/failure/agent-dropout', desc: 'Simulate agent mass dropout' },
+      { method: 'POST', path: '/api/webhooks/plivo/answer', desc: 'Plivo telecom call answered webhook' },
+      { method: 'POST', path: '/api/webhooks/plivo/hangup', desc: 'Plivo telecom call hangup webhook' },
+    ],
   });
 });
