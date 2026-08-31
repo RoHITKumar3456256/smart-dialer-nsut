@@ -183,18 +183,19 @@ npm run dev
 
 Open → **`http://localhost:5173`**
 
-### Step 3 — Run All Tests
+### Step 3 — Run All Tests & Benchmarks
 
 ```bash
 cd backend
-npm test
+npm test         # Run all 35 unit, integration & load tests
+npm run test:load # Run dedicated 500-agent load test benchmark
 ```
 
-Expected: ✅ **33 tests pass** across 4 test files
+Expected: ✅ **35 tests pass** across 5 test files
 
 ---
 
-## 🧪 Test Coverage
+## 🧪 Test Coverage & Benchmarks
 
 | Test File | What It Tests |
 |-----------|--------------|
@@ -202,6 +203,10 @@ Expected: ✅ **33 tests pass** across 4 test files
 | `stateMachine.test.ts` | Out-of-order events, duplicate idempotency, stale recovery |
 | `safetyController.test.ts` | Oversubscription limits, APPROVE/REDUCE/REJECT logic |
 | `concurrency.test.ts` | Two workers trying to reserve the same agent simultaneously |
+| `load.test.ts` | **50 workers, 500 agents, 1000 borrowers load benchmark (101 allocations/sec, 0 collisions)** |
+
+> 📚 **Looking for Technical Discussion & Interview Q&A?**  
+> See [docs/INTERVIEW_DEFENSE.md](docs/INTERVIEW_DEFENSE.md) for deep-dive answers to all scale, cache-invalidation, and failure-mode interview questions.
 
 ---
 
