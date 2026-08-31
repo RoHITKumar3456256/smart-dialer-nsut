@@ -16,10 +16,13 @@ let _db: Database.Database | null = null;
 export function getDb(): Database.Database {
   if (!_db) {
     _db = new Database(DB_PATH);
-    // WAL mode: allows concurrent reads while one writer is active
+    // High-performance WAL mode + memory cache + busy timeout
     _db.pragma('journal_mode = WAL');
     _db.pragma('foreign_keys = ON');
     _db.pragma('synchronous = NORMAL');
+    _db.pragma('temp_store = MEMORY');
+    _db.pragma('cache_size = -64000'); // 64MB RAM page cache
+    _db.pragma('busy_timeout = 5000'); // Auto-retry for 5000ms if concurrent writer is active
     initSchema(_db);
   }
   return _db;
